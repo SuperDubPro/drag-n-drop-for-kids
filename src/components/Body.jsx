@@ -1,14 +1,37 @@
+import { v1 as genUuid } from 'uuid';
 import DATA from '../project-config';
 import Draggable from './Draggable';
+import Droppable from './Droppable';
 
 function Body() {
   const { scheme } = DATA;
+  const mScheme = new Map();
+
+  scheme.forEach(text => {
+    mScheme.set(genUuid(), text);
+  });
 
   return (
     <div className="body">
-      Hi!
+      <div className="drop-list">
+        {Array.from(mScheme).map(([uuid, text]) => (
+          <Droppable
+            uuid={uuid}
+            key={`droppable-component-${uuid}`}
+            text={text}
+            onDrop={(e) => console.log(e, uuid)}
+          />
+        ))}
+      </div>
+
       <div className="drag-list">
-        {scheme.map(text => <Draggable text={text} key={`draggable-${text}`} />)}
+        {Array.from(mScheme).map(([uuid, text]) => (
+          <Draggable
+            uuid={uuid}
+            key={`draggable-component-${uuid}`}
+            text={text}
+          />
+        ))}
       </div>
     </div>
   );

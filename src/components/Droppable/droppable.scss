@@ -1,1 +1,7 @@
 @import '../../style/colors';
+
+.droppable {
+	border: 4px dashed $droppable-border;
+	background: $droppable-bg;
+	width: 420px;
+}

@@ -21,8 +21,10 @@
         "react/jsx-filename-extension": ["off"],
         "react/react-in-jsx-scope": ["off"],
         "react/jsx-one-expression-per-line": ["off"],
+        "jsx-a11y/no-static-element-interactions": ["off"],
         "object-curly-newline": ["off"],
         "arrow-parens": ["off"],
+        "max-len": ["off"],
         "comma-dangle": ["error", "never"]
     }
 }
