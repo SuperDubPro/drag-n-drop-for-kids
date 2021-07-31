@@ -3,20 +3,19 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
 function Droppable({ uuid, onDragOver, onDrop }) {
-  const onTouchDrop = (e) => {
-    // if (this.ondrop_) { this.ondrop_(e); m.redraw() }
-    // console.log('Droppable', onDrop, e);
+  const handleTouchDrop = (e) => {
     onDrop(e);
   };
 
-  const handleTouchDrop = (e) => { onTouchDrop(e); };
-
   useEffect(() => {
     const droppable = document.getElementById(`droppable-${uuid}`);
-    droppable.addEventListener('touchstart', handleTouchDrop);
+    // droppable.addEventListener('touchstart', handleTouchDrop);
+    droppable.addEventListener(`custom-event-${uuid}`, handleTouchDrop);
+    droppable.addEventListener('drop', handleTouchDrop);
 
     return () => {
-      droppable.removeEventListener('touchstart', handleTouchDrop);
+      droppable.removeEventListener(`custom-event-${uuid}`, handleTouchDrop);
+      droppable.removeEventListener('drop', handleTouchDrop);
     };
   });
 
@@ -24,8 +23,8 @@ function Droppable({ uuid, onDragOver, onDrop }) {
     <div
       className="droppable p-3 m-2"
       id={`droppable-${uuid}`}
-      onDragOver={(e) => { onDragOver(e); }}
-      onDrop={(e) => { onDrop(e); }}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
     />
   );
 }
