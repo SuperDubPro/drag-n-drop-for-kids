@@ -8,7 +8,8 @@ function Body() {
   const mScheme = new Map();
 
   scheme.forEach(text => {
-    mScheme.set(genUuid(), text);
+    const uuid = genUuid();
+    mScheme.set(uuid, { uuid, text, styleClass: '' });
   });
 
   const getShuffledArr = (array) => {
@@ -22,7 +23,7 @@ function Body() {
     return newArr;
   };
 
-  const cards = getShuffledArr(Array.from(mScheme));
+  const cardsOrder = getShuffledArr(Array.from(mScheme).map(([uuid]) => uuid));
 
   const handleDragStart = (e) => {
     console.log('handleDragStart', e);
@@ -36,30 +37,41 @@ function Body() {
     console.log('handleDragEnd', e);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleDragOver = (e) => {
-    console.log('handleDragOver', e);
+    // console.log('handleDragOver', e);
+  };
+
+  const handleDragEnter = (e) => {
+    console.log('handleDragEnter', e);
+  };
+
+  const handleDragLeave = (e) => {
+    console.log('handleDragLeave', e);
   };
 
   return (
     <div className="body">
       <div className="drop-list">
-        {Array.from(mScheme).map(([uuid, text]) => (
+        {Array.from(mScheme).map(([uuid]) => (
           <Droppable
             uuid={uuid}
             key={`droppable-component-${uuid}`}
-            text={text}
+            // text={state.text}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
           />
         ))}
       </div>
 
       <div className="drag-list">
-        {cards.map(([uuid, text]) => (
+        {cardsOrder.map(uuid => (
           <Draggable
             uuid={uuid}
             key={`draggable-component-${uuid}`}
-            text={text}
+            text={mScheme.get(uuid).text}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           />

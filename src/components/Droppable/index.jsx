@@ -2,7 +2,7 @@ import './droppable.scss';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
-function Droppable({ uuid, onDragOver, onDrop, className }) {
+function Droppable({ uuid, text, onDragOver, onDrop, onDragEnter, onDragLeave, className }) {
   const handleTouchDrop = (e) => {
     onDrop(e);
   };
@@ -16,14 +16,26 @@ function Droppable({ uuid, onDragOver, onDrop, className }) {
     onDrop(e);
   };
 
+  const handleDragEnter = (e) => {
+    onDragEnter(e);
+  };
+
+  const handleDragLeave = (e) => {
+    onDragLeave(e);
+  };
+
   useEffect(() => {
     const droppable = document.getElementById(`droppable-${uuid}`);
     droppable.addEventListener(`custom-drop-${uuid}`, handleTouchDrop);
     droppable.addEventListener(`custom-dragover-${uuid}`, handleDragOver);
+    droppable.addEventListener(`custom-dragenter-${uuid}`, handleDragEnter);
+    droppable.addEventListener(`custom-dragleave-${uuid}`, handleDragLeave);
 
     return () => {
       droppable.removeEventListener(`custom-drop-${uuid}`, handleTouchDrop);
       droppable.removeEventListener(`custom-dragover-${uuid}`, handleDragOver);
+      droppable.removeEventListener(`custom-dragenter-${uuid}`, handleDragEnter);
+      droppable.removeEventListener(`custom-dragleave-${uuid}`, handleDragLeave);
     };
   });
 
@@ -33,23 +45,31 @@ function Droppable({ uuid, onDragOver, onDrop, className }) {
       id={`droppable-${uuid}`}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-    />
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+    >
+      <div className="text">{text}</div>
+    </div>
   );
 }
 
 Droppable.propTypes = {
-  // text: PropTypes.string,
+  text: PropTypes.string,
   uuid: PropTypes.string,
   className: PropTypes.string,
+  onDragEnter: PropTypes.func,
   onDragOver: PropTypes.func,
+  onDragLeave: PropTypes.func,
   onDrop: PropTypes.func
 };
 
 Droppable.defaultProps = {
-  // text: '',
+  text: '',
   uuid: Math.random().toString(),
   className: '',
+  onDragEnter: () => {},
   onDragOver: () => {},
+  onDragLeave: () => {},
   onDrop: () => {}
 };
 

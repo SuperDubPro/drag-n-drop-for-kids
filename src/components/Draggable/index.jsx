@@ -12,10 +12,13 @@ function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd }) {
     clientWidth: 0
   };
   let draggableClone = null;
+  // eslint-disable-next-line no-unused-vars
+  let privElemBelow = null;
 
   const clearState = () => {
     if (draggableClone) { draggableClone.remove(); }
     draggableClone = null;
+    privElemBelow = null;
     coordinates.leftCorrection = 0;
     coordinates.topCorrection = 0;
     coordinates.pageHeight = 0;
@@ -135,11 +138,22 @@ function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd }) {
     const click = touch || e;
     const cloneStyle = draggableClone.style;
     const elemBelow = document.elementFromPoint(click.clientX, click.clientY);
+    const isPrivDroppable = privElemBelow?.classList.contains('droppable');
 
     if (elemBelow?.classList.contains('droppable')) {
-      const event = new Event(`custom-dragover-${elemBelow.id.substring(10)}`);
-      elemBelow.dispatchEvent(event);
+      if (!isPrivDroppable) {
+        const dragEnterEvent = new Event(`custom-dragenter-${elemBelow.id.substring(10)}`);
+        elemBelow.dispatchEvent(dragEnterEvent);
+      }
+
+      const dragOverEvent = new Event(`custom-dragover-${elemBelow.id.substring(10)}`);
+      elemBelow.dispatchEvent(dragOverEvent);
+    } else if (isPrivDroppable) {
+      const dragLeaveEvent = new Event(`custom-dragleave-${privElemBelow.id.substring(10)}`);
+      privElemBelow.dispatchEvent(dragLeaveEvent);
     }
+
+    privElemBelow = elemBelow;
 
     cloneStyle.position = 'absolute';
     cloneStyle.left = `${click.pageX - coordinates.leftCorrection}px`;

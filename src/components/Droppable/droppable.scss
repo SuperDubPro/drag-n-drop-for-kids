@@ -4,6 +4,10 @@
 	border: 4px dashed $droppable-border;
 	background: $droppable-bg;
 	width: 420px;
+
+	.text {
+		opacity: .2;
+	}
 }
 
 .hovered {
