@@ -2,7 +2,7 @@ import './draggable.scss';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
-function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
+function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd }) {
   const coordinates = {
     leftCorrection: 0,
     topCorrection: 0,
@@ -12,12 +12,10 @@ function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
     clientWidth: 0
   };
   let draggableClone = null;
-  let isMouseDown = false;
 
   const clearState = () => {
     if (draggableClone) { draggableClone.remove(); }
     draggableClone = null;
-    isMouseDown = false;
     coordinates.leftCorrection = 0;
     coordinates.topCorrection = 0;
     coordinates.pageHeight = 0;
@@ -70,7 +68,6 @@ function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
   };
 
   const dragScroll = (e) => {
-    // const touch = e.targetTouches[0];
     const scrollZonePx = 25;
     const elemsBelow = document.elementsFromPoint(e.clientX, e.clientY);
 
@@ -125,27 +122,31 @@ function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
     }
   };
 
-  const handleMouseUp = (e) => {
+  const handleCancel = (e) => {
     if (e.cancelable) { e.preventDefault(); }
     clearState();
 
-    onMouseUp(e);
     onDragEnd(e);
   };
 
-  const handleDrag = (e, touch) => {
-    if (!isMouseDown) { return; }
+  const handleMove = (e, touch) => {
     if (e.cancelable) { e.preventDefault(); }
 
     const click = touch || e;
     const cloneStyle = draggableClone.style;
+    const elemBelow = document.elementFromPoint(click.clientX, click.clientY);
+
+    if (elemBelow?.classList.contains('droppable')) {
+      const event = new Event(`custom-dragover-${elemBelow.id.substring(10)}`);
+      elemBelow.dispatchEvent(event);
+    }
 
     cloneStyle.position = 'absolute';
     cloneStyle.left = `${click.pageX - coordinates.leftCorrection}px`;
     cloneStyle.top = `${click.pageY - coordinates.topCorrection}px`;
   };
 
-  const handleDragEnd = (e, touch) => {
+  const handleEnd = (e, touch) => {
     clearState();
     const click = touch || e;
 
@@ -154,12 +155,11 @@ function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
       const elemBelow = document.elementFromPoint(click.clientX, click.clientY);
 
       if (elemBelow?.classList.contains('droppable')) {
-        const event = new Event(`custom-event-${elemBelow.id.substring(10)}`);
+        const event = new Event(`custom-drop-${elemBelow.id.substring(10)}`);
         elemBelow.dispatchEvent(event);
       }
     }
 
-    onMouseUp(e);
     onDragEnd(e);
   };
 
@@ -173,11 +173,12 @@ function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
     coordinates.topCorrection = clickEvent.clientY - box.top;
 
     draggableClone.id = `clone-${uuid}`;
-    draggableClone.onmouseup = handleDragEnd;
+    draggableClone.draggable = true;
 
     copyComputedStyle(elem, draggableClone);
 
     cloneStyle.position = 'absolute';
+    cloneStyle.pointerEvents = 'none';
     cloneStyle.zIndex = 1020;
     cloneStyle.opacity = 0.5;
     cloneStyle.left = `${clickEvent.pageX - coordinates.leftCorrection}px`;
@@ -199,21 +200,20 @@ function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
     coordinates.clientWidth = Math.max(window.innerWidth, documentElement.clientWidth);
   };
 
-  const handleMouseDown = (e, touch) => {
+  const handleStart = (e, touch) => {
     const draggable = e.currentTarget;
     const click = touch || e;
 
     if (!draggableClone) { cloneElem(draggable, click); }
     dragScroll(click);
 
-    onMouseDown(e);
-    isMouseDown = true;
+    onDragStart(e);
   };
 
-  const handleTouchStart = (e) => { handleMouseDown(e, e.changedTouches[0]); };
-  const handleTouchMove = (e) => { handleDrag(e, e.changedTouches[0]); };
-  const handleTouchEnd = (e) => { handleDragEnd(e, e.changedTouches[0]); };
-  const handleTouchCancel = (e) => { handleMouseUp(e); };
+  const handleTouchStart = (e) => { handleStart(e, e.changedTouches[0]); };
+  const handleTouchMove = (e) => { handleMove(e, e.changedTouches[0]); };
+  const handleTouchEnd = (e) => { handleEnd(e, e.changedTouches[0]); };
+  const handleTouchCancel = (e) => { handleCancel(e); };
 
   useEffect(() => {
     const draggable = document.getElementById(`draggable-${uuid}`);
@@ -221,14 +221,12 @@ function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
     draggable.addEventListener('touchmove', handleTouchMove);
     draggable.addEventListener('touchend', handleTouchEnd);
     draggable.addEventListener('touchcancel', handleTouchCancel);
-    document.addEventListener('mousemove', handleDrag);
 
     return () => {
       draggable.removeEventListener('touchstart', handleTouchStart);
       draggable.removeEventListener('touchmove', handleTouchMove);
       draggable.removeEventListener('touchend', handleTouchEnd);
       draggable.removeEventListener('touchcancel', handleTouchCancel);
-      document.removeEventListener('mousemove', handleDrag);
     };
   });
 
@@ -237,7 +235,9 @@ function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
       className="draggable p-2 m-2"
       draggable="true"
       id={`draggable-${uuid}`}
-      onMouseDown={handleMouseDown}
+      onDragStart={onDragStart}
+      onDrag={onDrag}
+      onDragEnd={onDragEnd}
     >
       {text}
     </div>
@@ -247,16 +247,16 @@ function Draggable({ text, uuid, onMouseDown, onMouseUp, onDragEnd }) {
 Draggable.propTypes = {
   text: PropTypes.string,
   uuid: PropTypes.string,
-  onMouseUp: PropTypes.func,
-  onMouseDown: PropTypes.func,
+  onDragStart: PropTypes.func,
+  onDrag: PropTypes.func,
   onDragEnd: PropTypes.func
 };
 
 Draggable.defaultProps = {
   text: '',
   uuid: Math.random().toString(),
-  onMouseUp: () => {},
-  onMouseDown: () => {},
+  onDragStart: () => {},
+  onDrag: () => {},
   onDragEnd: () => {}
 };
 

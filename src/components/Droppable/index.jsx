@@ -2,29 +2,37 @@ import './droppable.scss';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
-function Droppable({ uuid, onDragOver, onDrop }) {
+function Droppable({ uuid, onDragOver, onDrop, className }) {
   const handleTouchDrop = (e) => {
+    onDrop(e);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    onDragOver(e);
+  };
+
+  const handleDrop = (e) => {
     onDrop(e);
   };
 
   useEffect(() => {
     const droppable = document.getElementById(`droppable-${uuid}`);
-    // droppable.addEventListener('touchstart', handleTouchDrop);
-    droppable.addEventListener(`custom-event-${uuid}`, handleTouchDrop);
-    droppable.addEventListener('drop', handleTouchDrop);
+    droppable.addEventListener(`custom-drop-${uuid}`, handleTouchDrop);
+    droppable.addEventListener(`custom-dragover-${uuid}`, handleDragOver);
 
     return () => {
-      droppable.removeEventListener(`custom-event-${uuid}`, handleTouchDrop);
-      droppable.removeEventListener('drop', handleTouchDrop);
+      droppable.removeEventListener(`custom-drop-${uuid}`, handleTouchDrop);
+      droppable.removeEventListener(`custom-dragover-${uuid}`, handleDragOver);
     };
   });
 
   return (
     <div
-      className="droppable p-3 m-2"
+      className={`droppable ${className} p-3 m-2`}
       id={`droppable-${uuid}`}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
     />
   );
 }
@@ -32,6 +40,7 @@ function Droppable({ uuid, onDragOver, onDrop }) {
 Droppable.propTypes = {
   // text: PropTypes.string,
   uuid: PropTypes.string,
+  className: PropTypes.string,
   onDragOver: PropTypes.func,
   onDrop: PropTypes.func
 };
@@ -39,6 +48,7 @@ Droppable.propTypes = {
 Droppable.defaultProps = {
   // text: '',
   uuid: Math.random().toString(),
+  className: '',
   onDragOver: () => {},
   onDrop: () => {}
 };

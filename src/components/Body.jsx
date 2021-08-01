@@ -24,6 +24,10 @@ function Body() {
 
   const cards = getShuffledArr(Array.from(mScheme));
 
+  const handleDragStart = (e) => {
+    console.log('handleDragStart', e);
+  };
+
   const handleDrop = (e) => {
     console.log('handleDrop', e);
   };
@@ -32,12 +36,8 @@ function Body() {
     console.log('handleDragEnd', e);
   };
 
-  const handleMouseDown = (e) => {
-    console.log('handleMouseDown', e);
-  };
-
-  const handleMouseUp = (e) => {
-    console.log('handleMouseUp', e);
+  const handleDragOver = (e) => {
+    console.log('handleDragOver', e);
   };
 
   return (
@@ -49,6 +49,7 @@ function Body() {
             key={`droppable-component-${uuid}`}
             text={text}
             onDrop={handleDrop}
+            onDragOver={handleDragOver}
           />
         ))}
       </div>
@@ -59,8 +60,7 @@ function Body() {
             uuid={uuid}
             key={`draggable-component-${uuid}`}
             text={text}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
+            onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           />
         ))}
