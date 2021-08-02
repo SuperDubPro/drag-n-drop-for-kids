@@ -1,13 +1,16 @@
 @import '../../style/colors';
 
 .droppable {
-	border: 4px dashed $droppable-border;
 	background: $droppable-bg;
-	width: 420px;
+	width: auto;
 
 	.text {
 		opacity: .2;
 	}
+}
+
+.border-dashed {
+	border: 4px dashed $droppable-border;
 }
 
 .hovered {
