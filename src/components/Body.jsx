@@ -1,17 +1,26 @@
 import { v1 as genUuid } from 'uuid';
+import React from 'react';
 import DATA from '../project-config';
 import Draggable from './Draggable';
 import Droppable from './Droppable';
 
 function Body() {
   const { scheme } = DATA;
-  const mScheme = new Map();
 
-  scheme.forEach(text => {
+  /** set mState */
+  const [mState, setState] = React.useState(new Map(scheme.map(text => {
     const uuid = genUuid();
-    mScheme.set(uuid, { uuid, text, styleClass: '' });
-  });
+    return [uuid, { uuid, text, isHovered: false, isVisible: true }];
+  })));
 
+  const changeStateIteration = (func) => {
+    setState(new Map(Array.from(mState).map(([id, cardState]) => {
+      func(id, cardState);
+      return [id, cardState];
+    })));
+  };
+
+  /** set cardsOrder */
   const getShuffledArr = (array) => {
     const newArr = [...array];
 
@@ -22,60 +31,72 @@ function Body() {
 
     return newArr;
   };
+  const [cardsOrder, setCardsOrder] = React.useState([]);
+  React.useEffect(() => {
+    setCardsOrder(getShuffledArr(Array.from(mState).map(([uuid]) => uuid)));
+  }, []);
 
-  const cardsOrder = getShuffledArr(Array.from(mScheme).map(([uuid]) => uuid));
+  const handleDragStart = React.useCallback((e, uuid) => {
+    console.log('handleDragStart', uuid);
+    setTimeout(() => changeStateIteration((id, state) => {
+      state.isVisible = id !== uuid;
+    }), 0);
+  }, []);
 
-  const handleDragStart = (e) => {
-    console.log('handleDragStart', e);
-  };
-
-  const handleDrop = (e) => {
+  const handleDrop = React.useCallback((e) => {
     console.log('handleDrop', e);
-  };
+    changeStateIteration((id, state) => {
+      state.isHovered = false;
+    });
+  }, []);
 
-  const handleDragEnd = (e) => {
-    console.log('handleDragEnd', e);
-  };
+  const handleDragEnd = React.useCallback((e, uuid) => {
+    changeStateIteration((id, state) => {
+      if (id === uuid) { state.isVisible = true; }
+    });
+  }, []);
 
-  // eslint-disable-next-line no-unused-vars
-  const handleDragOver = (e) => {
-    // console.log('handleDragOver', e);
-  };
+  const handleDragEnter = React.useCallback((e, uuid) => {
+    changeStateIteration((id, state) => {
+      state.isHovered = id === uuid;
+    });
+  }, []);
 
-  const handleDragEnter = (e) => {
-    console.log('handleDragEnter', e);
-  };
-
-  const handleDragLeave = (e) => {
-    console.log('handleDragLeave', e);
-  };
+  const handleDragLeave = React.useCallback(() => {
+    changeStateIteration((id, state) => {
+      state.isHovered = false;
+    });
+  }, []);
 
   return (
     <div className="body">
       <div className="drop-list">
-        {Array.from(mScheme).map(([uuid]) => (
+        {Array.from(mState).map(([uuid]) => (
           <Droppable
             uuid={uuid}
             key={`droppable-component-${uuid}`}
-            // text={state.text}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
+            className={mState.get(uuid).isHovered ? 'hovered' : ''}
+            onDrop={(e) => { handleDrop(e, uuid); }}
+            onDragEnter={(e) => { handleDragEnter(e, uuid); }}
+            onDragLeave={(e) => { handleDragLeave(e, uuid); }}
           />
         ))}
       </div>
 
       <div className="drag-list">
-        {cardsOrder.map(uuid => (
-          <Draggable
-            uuid={uuid}
-            key={`draggable-component-${uuid}`}
-            text={mScheme.get(uuid).text}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-          />
-        ))}
+        {cardsOrder.map(uuid => {
+          const card = mState.get(uuid);
+          return (
+            <Draggable
+              uuid={uuid}
+              key={`draggable-component-${uuid}`}
+              text={card.uuid}
+              className={card.isVisible ? '' : 'hidden'}
+              onDragStart={(e) => { handleDragStart(e, uuid); }}
+              onDragEnd={(e) => { handleDragEnd(e, uuid); }}
+            />
+          );
+        })}
       </div>
     </div>
   );

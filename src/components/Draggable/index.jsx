@@ -2,7 +2,7 @@ import './draggable.scss';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
-function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd }) {
+function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd, className }) {
   const coordinates = {
     leftCorrection: 0,
     topCorrection: 0,
@@ -12,7 +12,6 @@ function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd }) {
     clientWidth: 0
   };
   let draggableClone = null;
-  // eslint-disable-next-line no-unused-vars
   let privElemBelow = null;
 
   const clearState = () => {
@@ -57,7 +56,6 @@ function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd }) {
           if (realStyle === 'font') {
             clone.style.fontSize = computedStyle.fontSize;
           }
-          // }
         } catch (e) {
           throw (new Error(`Ошибка при клонировании стиля ${e}`));
         }
@@ -224,6 +222,10 @@ function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd }) {
     onDragStart(e);
   };
 
+  const handleDragStart = (e) => { onDragStart(e); };
+  const handleDrag = (e) => { onDrag(e); };
+  const handleDragEnd = (e) => { onDragEnd(e); };
+
   const handleTouchStart = (e) => { handleStart(e, e.changedTouches[0]); };
   const handleTouchMove = (e) => { handleMove(e, e.changedTouches[0]); };
   const handleTouchEnd = (e) => { handleEnd(e, e.changedTouches[0]); };
@@ -242,16 +244,16 @@ function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd }) {
       draggable.removeEventListener('touchend', handleTouchEnd);
       draggable.removeEventListener('touchcancel', handleTouchCancel);
     };
-  });
+  }, []);
 
   return (
     <div
-      className="draggable p-2 m-2"
+      className={`draggable ${className} p-2 m-2`}
       draggable="true"
       id={`draggable-${uuid}`}
-      onDragStart={onDragStart}
-      onDrag={onDrag}
-      onDragEnd={onDragEnd}
+      onDragStart={handleDragStart}
+      onDrag={handleDrag}
+      onDragEnd={handleDragEnd}
     >
       {text}
     </div>
@@ -261,6 +263,7 @@ function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd }) {
 Draggable.propTypes = {
   text: PropTypes.string,
   uuid: PropTypes.string,
+  className: PropTypes.string,
   onDragStart: PropTypes.func,
   onDrag: PropTypes.func,
   onDragEnd: PropTypes.func
@@ -269,6 +272,7 @@ Draggable.propTypes = {
 Draggable.defaultProps = {
   text: '',
   uuid: Math.random().toString(),
+  className: '',
   onDragStart: () => {},
   onDrag: () => {},
   onDragEnd: () => {}

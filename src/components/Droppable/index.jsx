@@ -17,10 +17,12 @@ function Droppable({ uuid, text, onDragOver, onDrop, onDragEnter, onDragLeave, c
   };
 
   const handleDragEnter = (e) => {
+    e.preventDefault();
     onDragEnter(e);
   };
 
   const handleDragLeave = (e) => {
+    e.preventDefault();
     onDragLeave(e);
   };
 
@@ -37,7 +39,7 @@ function Droppable({ uuid, text, onDragOver, onDrop, onDragEnter, onDragLeave, c
       droppable.removeEventListener(`custom-dragenter-${uuid}`, handleDragEnter);
       droppable.removeEventListener(`custom-dragleave-${uuid}`, handleDragLeave);
     };
-  });
+  }, []);
 
   return (
     <div
