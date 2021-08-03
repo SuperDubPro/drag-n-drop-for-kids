@@ -248,7 +248,7 @@ function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd, className }) {
 
   return (
     <div
-      className={`draggable ${className} p-2 m-2`}
+      className={`interactive draggable ${className} p-2 m-2`}
       draggable="true"
       id={`draggable-${uuid}`}
       onDragStart={handleDragStart}

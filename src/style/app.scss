@@ -6,18 +6,35 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	font-size: calc(10px + 2vmin);
+	//font-size: calc(10px + 2vmin);
+	font-size: 18px;
 	color: white;
 }
 
 .body {
-	width: 100%;
+	//width: 100%;
 }
 
-.drag-list {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
+.lists-container {
+
+	.interactive-list {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		//overflow-x: scroll;
+
+		.interactive-container {
+			//width: 16rem;
+			//min-height: 8rem;
+
+			.interactive {
+				border-radius: .25rem;
+				width: 14rem;
+				min-height: 6rem;
+			}
+		}
+	}
 }
 
 /*.App-logo {*/

@@ -43,7 +43,7 @@ function Droppable({ uuid, text, onDragOver, onDrop, onDragEnter, onDragLeave, c
 
   return (
     <div
-      className={`droppable ${className} p-3 m-2`}
+      className={`interactive droppable ${className} p-2 m-2`}
       id={`droppable-${uuid}`}
       onDragOver={handleDragOver}
       onDrop={handleDrop}

@@ -4,6 +4,8 @@ import DATA from '../project-config';
 import Draggable from './Draggable';
 import Droppable from './Droppable';
 
+const { scheme } = DATA;
+
 const getShuffledArr = (array) => {
   const newArr = [...array];
 
@@ -16,14 +18,13 @@ const getShuffledArr = (array) => {
 };
 
 function Body() {
-  const { scheme } = DATA;
-
   /** set mState */
-  const [mState, setState] = React.useState(() => new Map(scheme.map((text, index) => {
+  const [mState, setState] = React.useState(() => new Map(scheme.map((item, index) => {
     const uuid = genUuid();
     return [uuid, {
       uuid,
-      text,
+      text: item.text,
+      name: item.name,
       isDragOver: false,
       isDragging: false,
       droppedUuid: '',
@@ -41,23 +42,33 @@ function Body() {
   /** set cardsOrder and cards */
   const [cardsOrder] = React.useState(() => getShuffledArr([...mState].map(([uuid]) => uuid)));
   const [cards, setCards] = React.useState(() => [...cardsOrder]);
+  const draggingUuidRef = React.useRef(null);
 
+  /** set handlers */
   const handleDragStart = React.useCallback((e, uuid) => {
+    draggingUuidRef.current = uuid;
     setTimeout(() => changeStateIteration((id, state) => {
       state.isDragging = id === uuid;
     }), 0);
   }, []);
 
-  const handleDrop = React.useCallback((e, droppedUuid) => {
+  const handleDrop = React.useCallback((e, dropUuid) => {
+    // console.log(e.currentTarget);
+    const droppedUuid = draggingUuidRef.current;
     setCards(prevCard => prevCard.filter(cardUuid => cardUuid !== droppedUuid));
     changeStateIteration((cardUuid, state) => {
       state.isDragOver = false;
       state.isDragging = false;
-      state.droppedUuid = cardUuid === droppedUuid ? droppedUuid : state.droppedUuid;
+      if (cardUuid === dropUuid) {
+        state.droppedUuid = droppedUuid;
+      } else {
+        state.droppedUuid = state.droppedUuid === droppedUuid ? '' : state.droppedUuid;
+      }
     });
   }, []);
 
   const handleDragEnd = React.useCallback(() => {
+    draggingUuidRef.current = null;
     changeStateIteration((id, state) => {
       state.isDragging = false;
     });
@@ -75,58 +86,74 @@ function Body() {
     });
   }, []);
 
+  /** create some jsx elements */
+  const createDroppable = (state) => {
+    const { uuid, droppedUuid, isDragOver } = state;
+
+    //  {(!state.droppedUuid || mState.get(state.droppedUuid).isDragging)
+    return (
+      <div
+        className="interactive-container"
+        key={`droppable-container-${uuid}`}
+      >
+        {!state.droppedUuid
+          ? (
+            <Droppable
+              uuid={uuid}
+              key={`droppable-component-${uuid}`}
+              className={`border-dashed ${isDragOver ? 'hovered' : ''}`}
+              onDrop={(e) => { handleDrop(e, uuid); }}
+              onDragEnter={(e) => { handleDragEnter(e, uuid); }}
+              onDragLeave={(e) => { handleDragLeave(e, uuid); }}
+            />
+          )
+          : (
+            <Draggable
+              uuid={droppedUuid}
+              key={`selected-card-${droppedUuid}`}
+              text={mState.get(droppedUuid).text}
+              className={mState.get(droppedUuid).isDragging ? 'hidden' : ''}
+              onDragStart={(e) => { handleDragStart(e, droppedUuid); }}
+              onDragEnd={(e) => { handleDragEnd(e, droppedUuid); }}
+            />
+          )}
+      </div>
+    );
+  };
+
+  const createDraggable = (state) => {
+    const { uuid } = state;
+
+    return (
+      <div
+        className="interactive-container"
+        key={`draggable-container-${uuid}`}
+      >
+        <Draggable
+          uuid={uuid}
+          key={`draggable-component-${uuid}`}
+          text={state.text}
+          className={state.isDragging ? 'hidden' : ''}
+          onDragStart={(e) => { handleDragStart(e, uuid); }}
+          onDragEnd={(e) => { handleDragEnd(e, uuid); }}
+        />
+      </div>
+    );
+  };
+
   return (
     <div className="body">
-      <div className="drop-list">
-        {[...mState].map(([uuid, state]) => (
-          <div
-            key={`droppable-container-${uuid}`}
-            style={{ width: '400px' }}
-          >
-            {!state.droppedUuid
-              ? (
-                <Droppable
-                  uuid={uuid}
-                  key={`droppable-component-${uuid}`}
-                  className={`border-dashed ${state.isDragOver ? 'hovered' : ''}`}
-                  onDrop={(e) => { handleDrop(e, uuid); }}
-                  onDragEnter={(e) => { handleDragEnter(e, uuid); }}
-                  onDragLeave={(e) => { handleDragLeave(e, uuid); }}
-                />
-              )
-              : (
-                <Draggable
-                  uuid={state.droppedUuid}
-                  key={`selected-card-${state.droppedUuid}`}
-                  text={mState.get(state.droppedUuid).text}
-                  className={mState.get(state.droppedUuid).isDragging ? 'hidden' : ''}
-                  onDragStart={(e) => { handleDragStart(e, state.droppedUuid); }}
-                  onDragEnd={(e) => { handleDragEnd(e, state.droppedUuid); }}
-                />
-              )}
-          </div>
-        ))}
-      </div>
+      <div className="lists-container">
+        <div className="interactive-list mb-3">
+          {[...mState].map(([, state]) => createDroppable(state))}
+        </div>
 
-      <div className="drag-list">
-        {cards.map(uuid => {
-          const card = mState.get(uuid);
-          return (
-            <div
-              key={`draggable-container-${uuid}`}
-              style={{ width: '400px' }}
-            >
-              <Draggable
-                uuid={uuid}
-                key={`draggable-component-${uuid}`}
-                text={card.text}
-                className={card.isDragging ? 'hidden' : ''}
-                onDragStart={(e) => { handleDragStart(e, uuid); }}
-                onDragEnd={(e) => { handleDragEnd(e, uuid); }}
-              />
-            </div>
-          );
-        })}
+        <div className="interactive-list">
+          {cards.map(uuid => {
+            const card = mState.get(uuid);
+            return createDraggable(card);
+          })}
+        </div>
       </div>
     </div>
   );
