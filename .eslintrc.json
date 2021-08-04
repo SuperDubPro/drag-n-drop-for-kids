@@ -25,6 +25,7 @@
         "import/no-named-as-default-member\n": ["off"],
         "object-curly-newline": ["off"],
         "arrow-parens": ["off"],
+        "linebreak-style": ["off"],
         "max-len": ["off"],
         "no-plusplus": ["off"],
         "no-param-reassign": ["off"],
