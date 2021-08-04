@@ -8,7 +8,7 @@
 	align-items: center;
 	//font-size: calc(10px + 2vmin);
 	font-size: 18px;
-	color: white;
+	color: $font;
 }
 
 .body {
@@ -34,6 +34,44 @@
 				min-height: 6rem;
 			}
 		}
+	}
+}
+
+.button-block {
+	display: flex;
+	justify-content: center;
+}
+
+.dropped-card-body {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.close-cross {
+	opacity: .7;
+	cursor: pointer;
+}
+
+.modal-content {
+	display: flex;
+	flex-direction: column;
+
+	h1 {
+		display: flex;
+		justify-content: center;
+	}
+
+	img {
+		//height: 300px;
+		height: 40vh;
+		width: auto;
+		margin: auto;
+	}
+
+	.button-block {
+		display: flex;
+		justify-content: flex-end;
 	}
 }
 

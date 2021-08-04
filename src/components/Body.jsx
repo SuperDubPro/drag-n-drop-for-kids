@@ -3,8 +3,19 @@ import React from 'react';
 import DATA from '../project-config';
 import Draggable from './Draggable';
 import Droppable from './Droppable';
+import Modal from './Modal';
+import successImgs from '../assets/success';
+import failImgs from '../assets/fail';
 
 const { scheme } = DATA;
+const successImgsArr = Object.keys(successImgs).map(key => successImgs[key]);
+const failImgsArr = Object.keys(failImgs).map(key => failImgs[key]);
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
 const getShuffledArr = (array) => {
   const newArr = [...array];
@@ -19,7 +30,7 @@ const getShuffledArr = (array) => {
 
 function Body() {
   /** set mState */
-  const [mState, setState] = React.useState(() => new Map(scheme.map((item, index) => {
+  const [mState, setState] = React.useState(() => new Map(scheme.map(item => {
     const uuid = genUuid();
     return [uuid, {
       uuid,
@@ -27,22 +38,31 @@ function Body() {
       name: item.name,
       isDragOver: false,
       isDragging: false,
-      droppedUuid: '',
-      index
+      droppedUuid: ''
     }];
   })));
 
   const changeStateIteration = (func) => {
-    setState(prevState => new Map([...prevState].map(([id, cardState]) => {
-      func(id, cardState);
-      return [id, cardState];
+    setState(prevState => new Map([...prevState].map(([uuid, cardState]) => {
+      func(uuid, cardState);
+      return [uuid, cardState];
     })));
+  };
+
+  const clearCard = (card) => {
+    card.droppedUuid = '';
+    card.isDragOver = false;
+    card.isDragging = false;
   };
 
   /** set cardsOrder and cards */
   const [cardsOrder] = React.useState(() => getShuffledArr([...mState].map(([uuid]) => uuid)));
   const [cards, setCards] = React.useState(() => [...cardsOrder]);
   const draggingUuidRef = React.useRef(null);
+
+  /** set some flags */
+  const [isCorrect, setIsCorrect] = React.useState(() => false);
+  const [isModalOpened, setIsModalOpened] = React.useState(() => false);
 
   /** set handlers */
   const handleDragStart = React.useCallback((e, uuid) => {
@@ -86,6 +106,34 @@ function Body() {
     });
   }, []);
 
+  const handleCheckClick = () => {
+    setIsCorrect([...mState].every(([uuid, state]) => state.droppedUuid === uuid));
+    setIsModalOpened(true);
+  };
+
+  const handleResetAll = () => {
+    changeStateIteration((uuid, card) => { clearCard(card); });
+    setCards([...cardsOrder]);
+  };
+
+  const handleResetCard = (cardState) => {
+    changeStateIteration((uuid, card) => {
+      if (card.droppedUuid === cardState.uuid) { clearCard(card); }
+    });
+    setCards(prevCards => cardsOrder
+      .filter(orderUuid => orderUuid === cardState.uuid
+        || prevCards.some(prevUuid => prevUuid === orderUuid)));
+  };
+
+  const handleCloseModalButton = () => {
+    setIsModalOpened(false);
+  };
+
+  const handleShowAnswers = () => {
+    setIsModalOpened(false);
+    changeStateIteration((uuid, card) => { card.droppedUuid = uuid; });
+  };
+
   /** create some jsx elements */
   const createDroppable = (state) => {
     const { uuid, droppedUuid, isDragOver } = state;
@@ -111,11 +159,21 @@ function Body() {
             <Draggable
               uuid={droppedUuid}
               key={`selected-card-${droppedUuid}`}
-              text={mState.get(droppedUuid).text}
               className={mState.get(droppedUuid).isDragging ? 'hidden' : ''}
               onDragStart={(e) => { handleDragStart(e, droppedUuid); }}
               onDragEnd={(e) => { handleDragEnd(e, droppedUuid); }}
-            />
+            >
+              <div className="dropped-card-body p-1">
+                <div>{mState.get(droppedUuid).text}</div>
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                <div
+                  className="close-cross ml-2"
+                  onClick={() => { handleResetCard(mState.get(droppedUuid)); }}
+                >
+                  ✖
+                </div>
+              </div>
+            </Draggable>
           )}
       </div>
     );
@@ -132,14 +190,62 @@ function Body() {
         <Draggable
           uuid={uuid}
           key={`draggable-component-${uuid}`}
-          text={state.text}
           className={state.isDragging ? 'hidden' : ''}
           onDragStart={(e) => { handleDragStart(e, uuid); }}
           onDragEnd={(e) => { handleDragEnd(e, uuid); }}
-        />
+        >
+          <div className="p-1">{state.text}</div>
+        </Draggable>
       </div>
     );
   };
+
+  const createModalBody = () => (
+    isCorrect
+      ? (
+        <div className="modal-content">
+          <h1 className="success p-0 mt-0">Правильно!</h1>
+          <img
+            src={successImgsArr[getRandomInt(0, successImgsArr.length)]}
+            alt="success_anime_gif"
+          />
+          <div className="button-block mt-4">
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={handleCloseModalButton}
+            >
+              Ок
+            </button>
+          </div>
+        </div>
+      )
+      : (
+        <div className="modal-content">
+          <h1 className="danger p-0 mt-0">Неправильно</h1>
+          <img
+            src={failImgsArr[getRandomInt(0, failImgsArr.length)]}
+            alt="Тут должна была быть картинка, но даже в этом Вам не повезло :("
+          />
+          <div className="button-block mt-4">
+            <button
+              className="btn btn-success mr-2"
+              type="button"
+              onClick={handleShowAnswers}
+            >
+              Показать ответ
+            </button>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={handleCloseModalButton}
+            >
+              Закрыть
+            </button>
+          </div>
+        </div>
+      )
+  );
 
   return (
     <div className="body">
@@ -155,6 +261,31 @@ function Body() {
           })}
         </div>
       </div>
+      <div className="button-block m-2">
+        <button
+          className="btn btn-secondary mr-2"
+          type="button"
+          disabled={cards.length === mState.size ? 'disabled' : ''}
+          onClick={handleResetAll}
+        >
+          Сбросить
+        </button>
+        <button
+          className="btn btn-primary"
+          type="button"
+          disabled={cards.length ? 'disabled' : ''}
+          onClick={handleCheckClick}
+        >
+          Проверить
+        </button>
+      </div>
+      {
+        isModalOpened && (
+          <Modal>
+            {createModalBody()}
+          </Modal>
+        )
+      }
     </div>
   );
 }

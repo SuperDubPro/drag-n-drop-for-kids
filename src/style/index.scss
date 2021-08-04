@@ -1,3 +1,5 @@
+@import 'colors';
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,6 +12,95 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  //color: #212529;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+  &:disabled {
+    pointer-events: none;
+    opacity: .65;
+  }
+
+  &.btn-primary {
+    color: #fff;
+    background-color: $primary;
+    border-color: $primary;
+    &:hover {
+      color: #fff;
+      background-color: $primary-dark;
+      border-color: $primary-darker;
+    }
+  }
+
+  &.btn-secondary {
+    color: #fff;
+    background-color: $secondary;
+    border-color: $secondary;
+    &:hover {
+      color: #fff;
+      background-color: $secondary-dark;
+      border-color: $primary-darker;
+    }
+  }
+
+  &.btn-success {
+    color: #fff;
+    background-color: $success;
+    border-color: $success;
+    &:hover {
+      color: #fff;
+      background-color: $success-dark;
+      border-color: $success-darker;
+    }
+  }
+
+  &.btn-danger {
+    color: #fff;
+    background-color: $danger;
+    border-color: $danger;
+    &:hover {
+      color: #fff;
+      background-color: $danger-dark;
+      border-color: $danger-darker;
+    }
+  }
+  //&.btn-outline-primary {
+  //  color: $primary;
+  //  border-color: $primary;
+  //}
+}
+
+.primary {
+  color: $primary
+}
+
+.secondary {
+  color: $secondary
+}
+
+.success {
+  color: $success;
+}
+
+.danger {
+  color: $danger;
 }
 
 $spacer: 1rem;

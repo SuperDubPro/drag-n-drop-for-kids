@@ -2,7 +2,7 @@ import './draggable.scss';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
-function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd, className }) {
+function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }) {
   const coordinates = {
     leftCorrection: 0,
     topCorrection: 0,
@@ -255,27 +255,28 @@ function Draggable({ text, uuid, onDragStart, onDrag, onDragEnd, className }) {
       onDrag={handleDrag}
       onDragEnd={handleDragEnd}
     >
-      {text}
+      {children}
     </div>
   );
 }
 
 Draggable.propTypes = {
-  text: PropTypes.string,
   uuid: PropTypes.string,
   className: PropTypes.string,
   onDragStart: PropTypes.func,
   onDrag: PropTypes.func,
-  onDragEnd: PropTypes.func
+  onDragEnd: PropTypes.func,
+  // eslint-disable-next-line react/forbid-prop-types
+  children: PropTypes.any
 };
 
 Draggable.defaultProps = {
-  text: '',
   uuid: Math.random().toString(),
   className: '',
   onDragStart: () => {},
   onDrag: () => {},
-  onDragEnd: () => {}
+  onDragEnd: () => {},
+  children: null
 };
 
 export default Draggable;
