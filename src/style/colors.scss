@@ -1,22 +1,32 @@
-$primary: #0d6efd;
-$primary-dark: #0b5ed7;
-$primary-darker: #0a58ca;
-$secondary: #6c757d;
-$secondary-dark: #5c636a;
-$secondary-darker: #565e64;
-$success: #198754;
-$success-dark: #188050;
-$success-darker: #17784b;
-$danger: #dc3545;
-$danger-dark: #cb313f;
-$danger-darker: #bb2d3a;
+$primary: #025ea1;
+$primary-dark: #035590;
+$primary-darker: #003274;
+$secondary: #7F7F7F;
+$secondary-dark: #7b7b7b;
+$secondary-darker: #6a6a6a;
+$success:  #B2C541;
+//$success: #198754;
+$success-dark: #a8ba3e;
+//$success-dark: #188050;
+$success-darker: #9dad3a;
+//$success-darker: #17784b;
+$danger: #EE6C23;
+//$danger: #dc3545;
+$danger-dark: #e26621;
+//$danger-dark: #cb313f;
+$danger-darker: #d96220;
+//$danger-darker: #bb2d3a;
+$dark:  #333333;
 
 $font: white;
 
-$page-bg: #282c34;
+$page-bg: #fff;
 
-$draggable-bg: #37445e;
+$draggable-bg: #025ea1;
 
-$droppable-bg: #2e333b;
-$droppable-hovered-bg: #383c42;
-$droppable-border: rgb(108,117,125, .4);
+$clear-grey: rgba(127, 127, 127, 0.17);
+
+$droppable-bg: #6CACE4;
+$droppable-hovered-bg: #4495D1;
+$droppable-border: rgba(2, 94, 161, 0.49);
+//$droppable-border: rgb(108,117,125, .4);

@@ -30,10 +30,11 @@ const getShuffledArr = (array) => {
 
 function Body() {
   /** set mState */
-  const [mState, setState] = React.useState(() => new Map(scheme.map(item => {
+  const [mState, setState] = React.useState(() => new Map(scheme.map((item, index) => {
     const uuid = genUuid();
     return [uuid, {
       uuid,
+      index,
       text: item.text,
       name: item.name,
       isDragOver: false,
@@ -141,9 +142,13 @@ function Body() {
     //  {(!state.droppedUuid || mState.get(state.droppedUuid).isDragging)
     return (
       <div
-        className="interactive-container"
+        className="interactive-container droppable-container mx-2"
         key={`droppable-container-${uuid}`}
       >
+        <div className="name-row-container dark my-1">
+          <div className="graph-arrow">🠗</div>
+          <div className="name-row">{typeof state.name === 'string' ? state.name : null}</div>
+        </div>
         {!state.droppedUuid
           ? (
             <Droppable
@@ -153,7 +158,13 @@ function Body() {
               onDrop={(e) => { handleDrop(e, uuid); }}
               onDragEnter={(e) => { handleDragEnter(e, uuid); }}
               onDragLeave={(e) => { handleDragLeave(e, uuid); }}
-            />
+            >
+              <div className="drop-index-container primary">
+                <div className="drop-index">
+                  {state.index + 1}
+                </div>
+              </div>
+            </Droppable>
           )
           : (
             <Draggable
@@ -184,12 +195,11 @@ function Body() {
 
     return (
       <div
-        className="interactive-container"
+        className="interactive-container m-2"
         key={`draggable-container-${uuid}`}
       >
         <Draggable
           uuid={uuid}
-          key={`draggable-component-${uuid}`}
           className={state.isDragging ? 'hidden' : ''}
           onDragStart={(e) => { handleDragStart(e, uuid); }}
           onDragEnd={(e) => { handleDragEnd(e, uuid); }}
@@ -247,20 +257,28 @@ function Body() {
       )
   );
 
+  // TODO разобраться почему работают приоритеты mr-0 над m-1 в bootstrap
   return (
     <div className="body">
       <div className="lists-container">
-        <div className="interactive-list mb-3">
-          {[...mState].map(([, state]) => createDroppable(state))}
+        <div className="interactive-list draggable-list p-4 my-4 mr-2 ml-4">
+          <div className="draggable-list-wrapper">
+            {cards.map(uuid => {
+              const card = mState.get(uuid);
+              return createDraggable(card);
+            })}
+          </div>
         </div>
 
-        <div className="interactive-list">
-          {cards.map(uuid => {
-            const card = mState.get(uuid);
-            return createDraggable(card);
-          })}
+        <div className="prompt-arrow dark">
+          ➜
+        </div>
+
+        <div className="interactive-list droppable-list p-4 my-4 mr-4 ml-2">
+          {[...mState].map(([, state]) => createDroppable(state))}
         </div>
       </div>
+
       <div className="button-block m-2">
         <button
           className="btn btn-secondary mr-2"
@@ -279,6 +297,7 @@ function Body() {
           Проверить
         </button>
       </div>
+
       {
         isModalOpened && (
           <Modal>

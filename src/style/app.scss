@@ -2,39 +2,95 @@
 
 .app {
 	background-color: $page-bg;
-	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	//font-size: calc(10px + 2vmin);
 	font-size: 18px;
 	color: $font;
 }
 
-.body {
-	//width: 100%;
-}
-
 .lists-container {
+	display: flex;
+	min-width: 800px;
+	max-height: 90vh;
 
 	.interactive-list {
 		display: flex;
-		flex-direction: row;
-		align-items: flex-start;
-		flex-wrap: wrap;
-		//overflow-x: scroll;
+		border: .2rem solid $clear-grey;
+		border-radius: .25rem;
+		overflow-y: auto;
 
 		.interactive-container {
-			//width: 16rem;
-			//min-height: 8rem;
-
 			.interactive {
 				border-radius: .25rem;
-				width: 14rem;
-				min-height: 6rem;
+				width: 15rem;
+				min-height: 7rem;
 			}
 		}
 	}
+
+	.draggable-list {
+		flex-basis: 0;
+		flex-grow: 1;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		justify-content: flex-end;
+
+		.draggable-list-wrapper {
+			display: inherit;
+			flex: inherit;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+		}
+	}
+
+	.droppable-list {
+		flex-direction: column;
+		max-width: 400px;
+
+		.droppable-container {
+			.name-row-container {
+				display: flex;
+				align-items: center;
+
+				.graph-arrow {
+					flex-basis: 0;
+					flex-grow: 1;
+					display: flex;
+					justify-content: center;
+					color: $secondary;
+					font-size: 36px;
+					align-items: center;
+				}
+				.name-row {
+					word-wrap: break-word;
+					width: 75%;
+				}
+			}
+			&:first-child {
+				.graph-arrow {
+					display: none;
+				}
+			}
+
+			.drop-index-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.drop-index {
+					font-size: 64px;
+					opacity: .4;
+				}
+			}
+		}
+	}
+}
+
+.prompt-arrow {
+	display: flex;
+	align-items: center;
+	font-size: 48px;
 }
 
 .button-block {
@@ -63,7 +119,6 @@
 	}
 
 	img {
-		//height: 300px;
 		height: 40vh;
 		width: auto;
 		margin: auto;
@@ -84,21 +139,6 @@
 /*  .App-logo {*/
 /*    animation: App-logo-spin infinite 20s linear;*/
 /*  }*/
-/*}*/
-
-/*.App-header {*/
-/*  background-color: #282c34;*/
-/*  min-height: 100vh;*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  align-items: center;*/
-/*  justify-content: center;*/
-/*  font-size: calc(10px + 2vmin);*/
-/*  color: white;*/
-/*}*/
-
-/*.App-link {*/
-/*  color: #61dafb;*/
 /*}*/
 
 /*@keyframes App-logo-spin {*/

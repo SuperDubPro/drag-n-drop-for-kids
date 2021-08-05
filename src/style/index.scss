@@ -39,44 +39,44 @@ code {
   }
 
   &.btn-primary {
-    color: #fff;
+    color: $font;
     background-color: $primary;
     border-color: $primary;
     &:hover {
-      color: #fff;
+      color: $font;
       background-color: $primary-dark;
       border-color: $primary-darker;
     }
   }
 
   &.btn-secondary {
-    color: #fff;
+    color: $font;
     background-color: $secondary;
     border-color: $secondary;
     &:hover {
-      color: #fff;
+      color: $font;
       background-color: $secondary-dark;
       border-color: $primary-darker;
     }
   }
 
   &.btn-success {
-    color: #fff;
+    color: $font;
     background-color: $success;
     border-color: $success;
     &:hover {
-      color: #fff;
+      color: $font;
       background-color: $success-dark;
       border-color: $success-darker;
     }
   }
 
   &.btn-danger {
-    color: #fff;
+    color: $font;
     background-color: $danger;
     border-color: $danger;
     &:hover {
-      color: #fff;
+      color: $font;
       background-color: $danger-dark;
       border-color: $danger-darker;
     }
@@ -101,6 +101,10 @@ code {
 
 .danger {
   color: $danger;
+}
+
+.dark {
+  color: $dark;
 }
 
 $spacer: 1rem;

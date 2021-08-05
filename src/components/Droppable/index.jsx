@@ -2,7 +2,7 @@ import './droppable.scss';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
-function Droppable({ uuid, text, onDragOver, onDrop, onDragEnter, onDragLeave, className }) {
+function Droppable({ uuid, onDragOver, onDrop, onDragEnter, onDragLeave, className, children }) {
   const handleTouchDrop = (e) => {
     onDrop(e);
   };
@@ -43,20 +43,21 @@ function Droppable({ uuid, text, onDragOver, onDrop, onDragEnter, onDragLeave, c
 
   return (
     <div
-      className={`interactive droppable ${className} p-2 m-2`}
+      className={`interactive droppable ${className} p-2`}
       id={`droppable-${uuid}`}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
     >
-      <div className="text">{text}</div>
+      {children}
     </div>
   );
 }
 
 Droppable.propTypes = {
-  text: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
+  children: PropTypes.any,
   uuid: PropTypes.string,
   className: PropTypes.string,
   onDragEnter: PropTypes.func,
@@ -66,7 +67,7 @@ Droppable.propTypes = {
 };
 
 Droppable.defaultProps = {
-  text: '',
+  children: null,
   uuid: Math.random().toString(),
   className: '',
   onDragEnter: () => {},

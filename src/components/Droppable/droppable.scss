@@ -2,7 +2,9 @@
 
 .droppable {
 	background: $droppable-bg;
-	width: auto;
+	//width: auto;
+	width: 14.2rem !important;
+	min-height: 6.2rem !important;
 
 	.text {
 		opacity: .2;
@@ -10,7 +12,7 @@
 }
 
 .border-dashed {
-	border: 4px dashed $droppable-border;
+	border: .4rem dashed $droppable-border;
 }
 
 .hovered {

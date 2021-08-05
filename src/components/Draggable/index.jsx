@@ -69,6 +69,7 @@ function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }
   };
 
   const dragScroll = (e) => {
+    // TODO проверь скролл
     const scrollZonePx = 25;
     const elemsBelow = document.elementsFromPoint(e.clientX, e.clientY);
 
@@ -248,7 +249,7 @@ function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }
 
   return (
     <div
-      className={`interactive draggable ${className} p-2 m-2`}
+      className={`interactive draggable ${className} p-2`}
       draggable="true"
       id={`draggable-${uuid}`}
       onDragStart={handleDragStart}
