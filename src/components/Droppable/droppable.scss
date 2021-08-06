@@ -9,6 +9,10 @@
 	.text {
 		opacity: .2;
 	}
+
+	& * {
+		pointer-events: none;
+	}
 }
 
 .border-dashed {
