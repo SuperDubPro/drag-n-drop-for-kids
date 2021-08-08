@@ -179,12 +179,13 @@ function Body() {
               <div className="dropped-card-body p-1">
                 <div>{mState.get(droppedUuid).text}</div>
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-                <div
-                  className="close-cross ml-2"
+                <button
+                  type="button"
+                  className="close-cross btn ml-2"
                   onClick={() => { handleResetCard(mState.get(droppedUuid)); }}
                 >
                   ✖
-                </div>
+                </button>
               </div>
             </Draggable>
           )}

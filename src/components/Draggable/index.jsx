@@ -65,7 +65,11 @@ function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }
 
   const isOverflown = (element) => {
     const { classList } = element;
-    return classList.contains('overflow-auto') || classList.contains('overflow-auto-x') || classList.contains('overflow-auto-y');
+    return classList.contains('overflow-auto')
+      || classList.contains('overflow-auto-x')
+      || classList.contains('overflow-auto-y')
+      || element.clientWidth < element.scrollWidth
+      || element.clientHeight < element.scrollHeight;
   };
 
   const dragScroll = (e) => {
@@ -151,8 +155,9 @@ function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }
       const dragLeaveEvent = new Event(`custom-dragleave-${privElemBelow.id.substring(10)}`);
       privElemBelow.dispatchEvent(dragLeaveEvent);
     }
-
     privElemBelow = elemBelow;
+
+    dragScroll(click);
 
     cloneStyle.position = 'absolute';
     cloneStyle.left = `${click.pageX - coordinates.leftCorrection}px`;
