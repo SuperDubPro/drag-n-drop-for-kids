@@ -176,7 +176,7 @@ function Body() {
               onDragStart={(e) => { handleDragStart(e, droppedUuid); }}
               onDragEnd={(e) => { handleDragEnd(e, droppedUuid); }}
             >
-              <div className="dropped-card-body p-1">
+              <div className="dragged-card-body p-1">
                 <div>{mState.get(droppedUuid).text}</div>
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                 <button

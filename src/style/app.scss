@@ -110,6 +110,11 @@
 	align-items: flex-start;
 }
 
+.dragged-card-body {
+	display: flex;
+	justify-content: space-between;
+}
+
 .close-cross {
 	opacity: .7;
 	cursor: pointer;
