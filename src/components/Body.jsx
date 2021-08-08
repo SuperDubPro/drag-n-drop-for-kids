@@ -1,4 +1,5 @@
 import { v1 as genUuid } from 'uuid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import DATA from '../project-config';
 import Draggable from './Draggable';
@@ -147,7 +148,7 @@ function Body() {
       >
         <div className="name-row-container dark my-1">
           <div className="graph-arrow-container">
-            <div className="graph-arrow">🠗</div>
+            <FontAwesomeIcon className="graph-arrow" icon={['fas', 'long-arrow-alt-down']} />
             <div className="name-row">{typeof state.name === 'string' ? state.name : null}</div>
           </div>
         </div>
@@ -184,7 +185,7 @@ function Body() {
                   className="close-cross btn ml-2"
                   onClick={() => { handleResetCard(mState.get(droppedUuid)); }}
                 >
-                  ✖
+                  <FontAwesomeIcon icon={['fas', 'times']} />
                 </button>
               </div>
             </Draggable>
@@ -274,7 +275,8 @@ function Body() {
         </div>
 
         <div className="prompt-arrow dark">
-          ➜
+          {/*➜*/}
+          <FontAwesomeIcon icon={['fas', 'sign-out-alt']} />
         </div>
 
         <div className="interactive-list droppable-list p-4 my-4 mr-4 ml-2">
