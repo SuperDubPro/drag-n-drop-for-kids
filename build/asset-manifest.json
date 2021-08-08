@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.e67c67ea.chunk.css",
+    "main.css": "/static/css/main.312bdb92.chunk.css",
     "main.js": "/static/js/main.87070058.chunk.js",
     "main.js.map": "/static/js/main.87070058.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.0aad21ef.js",
@@ -8,7 +8,7 @@
     "static/js/2.bee76aa7.chunk.js": "/static/js/2.bee76aa7.chunk.js",
     "static/js/2.bee76aa7.chunk.js.map": "/static/js/2.bee76aa7.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.e67c67ea.chunk.css.map": "/static/css/main.e67c67ea.chunk.css.map",
+    "static/css/main.312bdb92.chunk.css.map": "/static/css/main.312bdb92.chunk.css.map",
     "static/js/2.bee76aa7.chunk.js.LICENSE.txt": "/static/js/2.bee76aa7.chunk.js.LICENSE.txt",
     "static/media/1Et.077d6458.gif": "/static/media/1Et.077d6458.gif",
     "static/media/Angry-Cat-PNG-Picture.c356e022.png": "/static/media/Angry-Cat-PNG-Picture.c356e022.png",
@@ -21,7 +21,7 @@
   "entrypoints": [
     "static/js/runtime-main.0aad21ef.js",
     "static/js/2.bee76aa7.chunk.js",
-    "static/css/main.e67c67ea.chunk.css",
+    "static/css/main.312bdb92.chunk.css",
     "static/js/main.87070058.chunk.js"
   ]
 }
