@@ -10,7 +10,7 @@
 
 .lists-container {
 	display: flex;
-	min-width: 800px;
+	min-width: 1400px;
 	max-height: 90vh;
 
 	.interactive-list {
@@ -22,8 +22,8 @@
 		.interactive-container {
 			.interactive {
 				border-radius: .25rem;
-				width: 15rem;
-				min-height: 6rem;
+				width: 40rem;
+				min-height: 2rem;
 			}
 		}
 	}
@@ -31,23 +31,21 @@
 	.draggable-list {
 		flex-basis: 0;
 		flex-grow: 1;
+		flex-direction: column;
 		display: flex;
-		flex-wrap: wrap;
 		align-items: flex-start;
-		justify-content: flex-end;
+		min-width: 24rem;
 		max-width: 54rem;
 
 		.draggable-list-wrapper {
 			display: inherit;
 			flex: inherit;
-			flex-wrap: wrap;
-			justify-content: flex-end;
+			flex-direction: inherit;
 		}
 	}
 
 	.droppable-list {
 		flex-direction: column;
-		max-width: 400px;
 
 		.droppable-container {
 			.name-row-container {
@@ -62,7 +60,7 @@
 					align-items: center;
 					.graph-arrow {
 						color: $secondary;
-						font-size: 36px;
+						font-size: 24px;
 					}
 				}
 
@@ -70,7 +68,8 @@
 					position: absolute;
 					left: 20px;
 					word-wrap: break-word;
-					width: 150px;
+					max-width: 300px;
+					width: max-content;
 				}
 			}
 			&:first-child {
@@ -85,7 +84,8 @@
 				align-items: center;
 
 				.drop-index {
-					font-size: 64px;
+					font-size: 16px;
+					font-weight: bolder;
 					opacity: .4;
 				}
 			}

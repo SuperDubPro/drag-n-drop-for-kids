@@ -275,8 +275,7 @@ function Body() {
         </div>
 
         <div className="prompt-arrow dark">
-          {/*➜*/}
-          <FontAwesomeIcon icon={['fas', 'sign-out-alt']} />
+          <FontAwesomeIcon className="graph-arrow" icon={['fas', 'long-arrow-alt-right']} />
         </div>
 
         <div className="interactive-list droppable-list p-4 my-4 mr-4 ml-2">
