@@ -146,8 +146,10 @@ function Body() {
         key={`droppable-container-${uuid}`}
       >
         <div className="name-row-container dark my-1">
-          <div className="graph-arrow">🠗</div>
-          <div className="name-row">{typeof state.name === 'string' ? state.name : null}</div>
+          <div className="graph-arrow-container">
+            <div className="graph-arrow">🠗</div>
+            <div className="name-row">{typeof state.name === 'string' ? state.name : null}</div>
+          </div>
         </div>
         {!state.droppedUuid
           ? (

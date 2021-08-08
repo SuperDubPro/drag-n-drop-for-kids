@@ -52,19 +52,24 @@
 			.name-row-container {
 				display: flex;
 				align-items: center;
+				justify-content: center;
 
-				.graph-arrow {
-					flex-basis: 0;
-					flex-grow: 1;
+				.graph-arrow-container {
+					position: relative;
 					display: flex;
 					justify-content: center;
-					color: $secondary;
-					font-size: 36px;
 					align-items: center;
+					.graph-arrow {
+						color: $secondary;
+						font-size: 36px;
+					}
 				}
+
 				.name-row {
+					position: absolute;
+					left: 20px;
 					word-wrap: break-word;
-					width: 75%;
+					width: 150px;
 				}
 			}
 			&:first-child {
