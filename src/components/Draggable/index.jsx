@@ -11,6 +11,7 @@ function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }
     clientHeight: 0,
     clientWidth: 0
   };
+  const notDragOrDrop = 'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
   let draggableClone = null;
   let privElemBelow = null;
 
@@ -129,6 +130,7 @@ function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }
   };
 
   const handleCancel = (e) => {
+    if (!draggableClone) { return; }
     if (e.cancelable) { e.preventDefault(); }
     clearState();
 
@@ -136,6 +138,7 @@ function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }
   };
 
   const handleMove = (e, touch) => {
+    if (!draggableClone) { return; }
     if (e.cancelable) { e.preventDefault(); }
 
     const click = touch || e;
@@ -165,10 +168,11 @@ function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }
   };
 
   const handleEnd = (e, touch) => {
+    if (!draggableClone) { return; }
     clearState();
     const click = touch || e;
 
-    if (!e.target.matches('button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')) {
+    if (!e.target.matches(notDragOrDrop)) {
       if (e.cancelable) { e.preventDefault(); }
       const elemBelow = document.elementFromPoint(click.clientX, click.clientY);
 
@@ -219,8 +223,14 @@ function Draggable({ uuid, onDragStart, onDrag, onDragEnd, className, children }
   };
 
   const handleStart = (e, touch) => {
-    const draggable = e.currentTarget;
     const click = touch || e;
+
+    const elemsBelow = document.elementsFromPoint(click.clientX, click.clientY);
+    if (elemsBelow.length && elemsBelow.some(elem => elem.matches(notDragOrDrop))) {
+      return;
+    }
+
+    const draggable = e.currentTarget;
 
     if (!draggableClone) { cloneElem(draggable, click); }
     dragScroll(click);

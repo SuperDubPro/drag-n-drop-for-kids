@@ -75,7 +75,6 @@ function Body() {
   }, []);
 
   const handleDrop = React.useCallback((e, dropUuid) => {
-    // console.log(e.currentTarget);
     const droppedUuid = draggingUuidRef.current;
     setCards(prevCard => prevCard.filter(cardUuid => cardUuid !== droppedUuid));
     changeStateIteration((cardUuid, state) => {
@@ -118,7 +117,7 @@ function Body() {
     setCards([...cardsOrder]);
   };
 
-  const handleResetCard = (cardState) => {
+  const handleRemoveCard = (cardState) => {
     changeStateIteration((uuid, card) => {
       if (card.droppedUuid === cardState.uuid) { clearCard(card); }
     });
@@ -183,7 +182,7 @@ function Body() {
                 <button
                   type="button"
                   className="close-cross btn ml-2"
-                  onClick={() => { handleResetCard(mState.get(droppedUuid)); }}
+                  onClick={handleRemoveCard.bind(this, mState.get(droppedUuid))}
                 >
                   <FontAwesomeIcon icon={['fas', 'times']} />
                 </button>
