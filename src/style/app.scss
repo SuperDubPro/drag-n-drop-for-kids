@@ -10,44 +10,51 @@
 
 .lists-container {
 	display: flex;
-	min-width: 80rem;
+	min-width: 70rem;
 	max-height: 90vh;
+
+	.button-block {
+		position: absolute;
+		bottom: -30px;
+		left: -220%;
+		display: flex;
+		justify-content: center;
+	}
+
+	.prompt-arrow-container {
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
 
 	.interactive-list {
 		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
 		border: .2rem solid $clear-grey;
 		border-radius: .25rem;
 		overflow-y: auto;
+		width: 45vw;
 
 		.interactive-container {
 			.interactive {
 				border-radius: .25rem;
-				width: 35rem;
 				min-height: 2rem;
 			}
 		}
 	}
 
-	.draggable-list {
-		flex-basis: 0;
-		flex-grow: 1;
+	.droppable-list {
 		flex-direction: column;
 		display: flex;
 		align-items: flex-start;
-		min-width: 24rem;
-		max-width: 38rem;
-
-		.draggable-list-wrapper {
-			display: inherit;
-			flex: inherit;
-			flex-direction: inherit;
-		}
-	}
-
-	.droppable-list {
-		flex-direction: column;
 
 		.droppable-container {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
 			.name-row-container {
 				display: flex;
 				align-items: center;
@@ -68,7 +75,7 @@
 					position: absolute;
 					left: 20px;
 					word-wrap: break-word;
-					max-width: 300px;
+					max-width: 240px;
 					width: max-content;
 				}
 			}
@@ -94,14 +101,7 @@
 }
 
 .prompt-arrow {
-	display: flex;
-	align-items: center;
 	font-size: 48px;
-}
-
-.button-block {
-	display: flex;
-	justify-content: center;
 }
 
 .dropped-card-body {

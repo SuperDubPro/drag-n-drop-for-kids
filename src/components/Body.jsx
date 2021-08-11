@@ -145,50 +145,52 @@ function Body() {
         className="interactive-container droppable-container mx-2"
         key={`droppable-container-${uuid}`}
       >
-        <div className="name-row-container dark my-1">
+        <div className="name-row-container dark w-100 my-1">
           <div className="graph-arrow-container">
             <FontAwesomeIcon className="graph-arrow" icon={['fas', 'long-arrow-alt-down']} />
             <div className="name-row">{typeof state.name === 'string' ? state.name : null}</div>
           </div>
         </div>
-        {!state.droppedUuid
-          ? (
-            <Droppable
-              uuid={uuid}
-              key={`droppable-component-${uuid}`}
-              className={`border-dashed ${isDragOver ? 'hovered' : ''}`}
-              onDrop={(e) => { handleDrop(e, uuid); }}
-              onDragEnter={(e) => { handleDragEnter(e, uuid); }}
-              onDragLeave={(e) => { handleDragLeave(e, uuid); }}
-            >
-              <div className="drop-index-container primary">
-                <div className="drop-index">
-                  {state.index + 1}
+        <div className="w-100">
+          {!state.droppedUuid
+            ? (
+              <Droppable
+                uuid={uuid}
+                key={`droppable-component-${uuid}`}
+                className={`border-dashed ${isDragOver ? 'hovered' : ''}`}
+                onDrop={(e) => { handleDrop(e, uuid); }}
+                onDragEnter={(e) => { handleDragEnter(e, uuid); }}
+                onDragLeave={(e) => { handleDragLeave(e, uuid); }}
+              >
+                <div className="drop-index-container primary">
+                  <div className="drop-index">
+                    {state.index + 1}
+                  </div>
                 </div>
-              </div>
-            </Droppable>
-          )
-          : (
-            <Draggable
-              uuid={droppedUuid}
-              key={`selected-card-${droppedUuid}`}
-              className={mState.get(droppedUuid).isDragging ? 'hidden' : ''}
-              onDragStart={(e) => { handleDragStart(e, droppedUuid); }}
-              onDragEnd={(e) => { handleDragEnd(e, droppedUuid); }}
-            >
-              <div className="dragged-card-body p-1">
-                <div>{mState.get(droppedUuid).text}</div>
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-                <button
-                  type="button"
-                  className="close-cross btn ml-2"
-                  onClick={handleRemoveCard.bind(this, mState.get(droppedUuid))}
-                >
-                  <FontAwesomeIcon icon={['fas', 'times']} />
-                </button>
-              </div>
-            </Draggable>
-          )}
+              </Droppable>
+            )
+            : (
+              <Draggable
+                uuid={droppedUuid}
+                key={`selected-card-${droppedUuid}`}
+                className={`${mState.get(droppedUuid).isDragging ? 'hidden' : ''}`}
+                onDragStart={(e) => { handleDragStart(e, droppedUuid); }}
+                onDragEnd={(e) => { handleDragEnd(e, droppedUuid); }}
+              >
+                <div className="dragged-card-body p-1">
+                  <div>{mState.get(droppedUuid).text}</div>
+                  {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                  <button
+                    type="button"
+                    className="close-cross btn ml-2"
+                    onClick={handleRemoveCard.bind(this, mState.get(droppedUuid))}
+                  >
+                    <FontAwesomeIcon icon={['fas', 'times']} />
+                  </button>
+                </div>
+              </Draggable>
+            )}
+        </div>
       </div>
     );
   };
@@ -203,7 +205,7 @@ function Body() {
       >
         <Draggable
           uuid={uuid}
-          className={state.isDragging ? 'hidden' : ''}
+          className={`${state.isDragging ? 'hidden' : ''} w-100`}
           onDragStart={(e) => { handleDragStart(e, uuid); }}
           onDragEnd={(e) => { handleDragEnd(e, uuid); }}
         >
@@ -265,7 +267,7 @@ function Body() {
     <div className="body">
       <div className="lists-container">
         <div className="interactive-list draggable-list p-4 my-4 mr-2 ml-4">
-          <div className="draggable-list-wrapper">
+          <div className="draggable-list-wrapper w-100">
             {cards.map(uuid => {
               const card = mState.get(uuid);
               return createDraggable(card);
@@ -273,34 +275,36 @@ function Body() {
           </div>
         </div>
 
-        <div className="prompt-arrow dark">
-          <FontAwesomeIcon className="graph-arrow" icon={['fas', 'long-arrow-alt-right']} />
+        <div className="prompt-arrow-container dark">
+          <div className="prompt-arrow dark">
+            <FontAwesomeIcon className="graph-arrow" icon={['fas', 'long-arrow-alt-right']} />
+          </div>
+          <div className="button-block m-2">
+            <button
+              className="btn btn-secondary mr-2"
+              type="button"
+              disabled={cards.length === mState.size ? 'disabled' : ''}
+              onClick={handleResetAll}
+            >
+              Сбросить
+            </button>
+            <button
+              className="btn btn-primary"
+              type="button"
+              disabled={cards.length ? 'disabled' : ''}
+              onClick={handleCheckClick}
+            >
+              Проверить
+            </button>
+          </div>
         </div>
 
         <div className="interactive-list droppable-list p-4 my-4 mr-4 ml-2">
-          {[...mState].map(([, state]) => createDroppable(state))}
+          <div className="droppable-list-wrapper w-100">
+            {[...mState].map(([, state]) => createDroppable(state))}
+          </div>
         </div>
       </div>
-
-      <div className="button-block m-2">
-        <button
-          className="btn btn-secondary mr-2"
-          type="button"
-          disabled={cards.length === mState.size ? 'disabled' : ''}
-          onClick={handleResetAll}
-        >
-          Сбросить
-        </button>
-        <button
-          className="btn btn-primary"
-          type="button"
-          disabled={cards.length ? 'disabled' : ''}
-          onClick={handleCheckClick}
-        >
-          Проверить
-        </button>
-      </div>
-
       {
         isModalOpened && (
           <Modal>
